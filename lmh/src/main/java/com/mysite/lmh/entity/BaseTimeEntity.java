@@ -14,4 +14,7 @@ public abstract class BaseTimeEntity { // 이 클래스는 추상화(Abstract) �
 	
 	@CreatedDate
 	private LocalDateTime createDate;
+	
+	@LastModifiedDate
+	private LocalDateTime lastModifiedDate;
 }
