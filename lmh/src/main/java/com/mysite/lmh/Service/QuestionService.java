@@ -2,6 +2,7 @@ package com.mysite.lmh.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -47,5 +48,9 @@ public class QuestionService {
 		seq.setLastNumber(newNumber);
 		this.sequenceRepository.save(seq);
 		return newNumber;
+	}
+	
+	public List<Question> getList() {
+		return this.questionRepository.findAll();
 	}
 }

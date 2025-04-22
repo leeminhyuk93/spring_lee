@@ -1,16 +1,27 @@
 package com.mysite.lmh;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import java.util.List;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.mysite.lmh.entity.Question;
+import com.mysite.lmh.Service.QuestionService;
+
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Controller
 public class MainController {
+	
+	private final QuestionService QuestionService;
 
 	@GetMapping("/")
-	@ResponseBody
-	public String root() {
-		return "<h2>Hello Spring World!</h2>";
+	public String root(Model model) {
+		List<Question> questionList = QuestionService.getList();
+		model.addAttribute("questionList", questionList);
+		return "board/questionList";
 	}
-	
 }
+
