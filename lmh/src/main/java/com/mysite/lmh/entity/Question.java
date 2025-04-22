@@ -22,4 +22,8 @@ public class Question{
 	
 	@Column(columnDefinition = "TEXT")
 	private String content;
+	
+	@Column(unique = true)
+	private String questionNo; // 예: 20250422-00001
+	
 }
