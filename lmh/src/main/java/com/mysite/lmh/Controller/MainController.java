@@ -1,4 +1,4 @@
-package com.mysite.lmh;
+package com.mysite.lmh.Controller;
 
 import java.util.List;
 
@@ -19,9 +19,7 @@ public class MainController {
 
 	@GetMapping("/")
 	public String root(Model model) {
-		List<Question> questionList = QuestionService.getList();
-		model.addAttribute("questionList", questionList);
-		return "board/questionList";
+		return "redirect:/questions";
 	}
 }
 

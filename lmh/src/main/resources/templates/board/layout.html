@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<!-- 메타 데이터 -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<!-- 부트스트랩 CSS -->
+		<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+		<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+		<title>스프링 프로젝트 연습</title>
+	</head>
+	<body>
+		<!-- 네비게이션 바(예정) -->
+		<nav th:replace="~{board/navbar :: navbarFragment}"></nav>
+		<!-- 기본 컨텐츠 템플릿 삽입 -->
+		<th:block layout:fragment="content"></th:block>
+		<!-- 부트스트랩 JS -->
+		<script th:src="@{/script/bootstrap.min.js}"></script>
+		<!-- 사용자 정의 JS 삽입 -->
+		<th:block layout:fragment="script"></th:block>
+	</body>
+</html>
