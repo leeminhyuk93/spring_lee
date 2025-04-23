@@ -33,19 +33,22 @@
 			</tr>
 		</tbody>
 	</table>
+	<div>
+		<a class="btn btn-primary" th:href="@{/question/create}">새 게시물</a>
+	</div>
 	<nav aria-label="Page navigation example">
 		<ul class="pagination justify-content-center">
 			<!-- 가장 최근 블록으로 -->
 			<li class="page-item">
 				<a class="page-link"
-					th:href="${currentPage > 0} ? '/questions?page=' + (${0}) : '#'"
+					th:href="${currentPage > 0} ? '/question/list?page=' + (${0}) : '#'"
 					th:style="${currentPage == 0} ? 'pointer-events: none; color: grey;' : ''"
 				>〈〈</a>
 			</li>
 			<!-- 이전 블록으로 -->
 			<li class="page-item">
 				<a class="page-link" 
-					th:href="${hasPrevBlock} ? '/questions?page=' + (${startPage - 1}) : '#'"
+					th:href="${hasPrevBlock} ? '/question/list?page=' + (${startPage - 1}) : '#'"
 					th:style="${!hasPrevBlock} ? 'pointer-events: none; color: grey;' : ''"
 				>〈</a>
 			</li>
@@ -53,20 +56,20 @@
 			<!-- 페이지 번호들 -->
 			<li class="page-item" th:each="i : ${#numbers.sequence(startPage, endPage - 1)}"
 				th:classappend="${i} == ${currentPage} ? 'active'">
-				<a class="page-link" th:href="@{/questions(page=${i})}" th:text="${i + 1}"></a>
+				<a class="page-link" th:href="@{/question/list(page=${i})}" th:text="${i + 1}"></a>
 			</li>
 			
 			<!-- 다음 블록으로 -->
 			<li class="page-item">
 				<a class="page-link" 
-					th:href="${hasNextBlock} ? '/questions?page=' + (${endPage}) : '#'"
+					th:href="${hasNextBlock} ? '/question/list?page=' + (${endPage}) : '#'"
 					th:style="${!hasNextBlock} ? 'pointer-events: none; color: grey;' : ''"
 				>〉</a>
 			</li>
 			<!-- 가장 오래된 블록으로 -->
 			<li class="page-item">
 				<a class="page-link"
-					th:href="${currentPage != totalPages - 1} ? '/questions?page=' + (${totalPages - 1}) : '#'"
+					th:href="${currentPage != totalPages - 1} ? '/question/list?page=' + (${totalPages - 1}) : '#'"
 					th:style="${currentPage == totalPages - 1} ? 'pointer-events: none; color: grey;' : ''"
 				>〉〉</a>
 			</li>
