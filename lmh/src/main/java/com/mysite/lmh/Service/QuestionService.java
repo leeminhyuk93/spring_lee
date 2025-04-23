@@ -4,6 +4,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.mysite.lmh.entity.Question;
@@ -52,5 +56,12 @@ public class QuestionService {
 	
 	public List<Question> getList() {
 		return this.questionRepository.findAll();
+	}
+	
+
+	public Page<Question> getQuestions(int page, int size) {
+		Sort sort = Sort.by("createDate").descending();
+		Pageable pageable = PageRequest.of(page, size, sort);
+		return this.questionRepository.findAll(pageable);
 	}
 }

@@ -1,0 +1,37 @@
+<html layout:decorate="~{board/layout}">>
+<div layout:fragment="content">
+	<div class="container">
+		<div class="row justify-content-center">
+			<h5 class="my-3 border-botton pb-2">질문등록</h5>
+			<form th:action="@{/question/create}" th:object="${questionForm}" method="post">
+				<div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+					<p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+				</div>
+				<div class="mb-3">
+					<label for="subject" class="form-control">제목</label>
+					<input type="text" th:field="*{subject}" id="subject" class="form-control" autocomplete="off">
+					<div class="text-danger" th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></div>
+				</div>
+				<div class="mb-3">
+					<label for="content" class="form-control">내용</label>
+					<textarea th:field="*{content}" id="content" class="form-control" rows="10" autocomplete="off"></textarea>
+					<div class="text-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
+				</div>
+				<button type="submit" id="submitBtn" th:text="작성하기" class="btn btn-primary my-2"></button>
+				<input type="hidden" name="formToken" th:value="${formToken}">
+			</form>
+		</div>
+	</div>
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const form = document.querySelector("form");
+			const submitBtn = document.getElementById("submitBtn");
+			form.addEventListener("submit", function() {
+				submitBtn.disabled = true;
+				submitBtn.innerText = "등록 중..";
+			})
+		})
+	</script>
+</div>
+
+</html>

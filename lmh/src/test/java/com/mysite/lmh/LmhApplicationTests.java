@@ -17,7 +17,7 @@ class LmhApplicationTests {
 	@Test
 	void test() {
 		
-		for (int i = 1; i <= 100; i++) {
+		for (int i = 1; i <= 300; i++) {
 			String subject = String.format("테스트 게시물[%03d]", i);
 			String content = "테스트 작성입니다.";
 			questionService.create(subject, content);
