@@ -7,11 +7,15 @@
 		<!-- 부트스트랩 CSS -->
 		<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
 		<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+		<!-- SweetAlert2 CSS -->
+		<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet"/>
+		<!-- SweetAlert2 JS -->
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 		<title>스프링 프로젝트 연습</title>
 	</head>
 	<body>
 		<!-- 네비게이션 바(예정) -->
-		<nav th:replace="~{board/navbar :: navbarFragment}"></nav>
+		<nav th:replace="~{layout/navbar :: navbarFragment}"></nav>
 		<!-- 기본 컨텐츠 템플릿 삽입 -->
 		<th:block layout:fragment="content"></th:block>
 		<!-- 부트스트랩 JS -->

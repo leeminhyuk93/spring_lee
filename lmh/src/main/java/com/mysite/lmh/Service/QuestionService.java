@@ -15,7 +15,8 @@ import com.mysite.lmh.entity.QuestionSequence;
 import com.mysite.lmh.repository.QuestionRepository;
 import com.mysite.lmh.repository.QuestionSequenceRepository;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -24,9 +25,11 @@ public class QuestionService {
 
 	private final QuestionRepository questionRepository;
 	private final QuestionSequenceRepository sequenceRepository;
+
 	
 	@Transactional
 	public Question create(String subject, String content) {
+		
 		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 		int nextSeq = getNextSequence(today);
 		String questionNo = String.format("%s-%05d", today, nextSeq);

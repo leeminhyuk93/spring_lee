@@ -1,0 +1,51 @@
+<html layout:decorate="~{layout/layout}">
+<div layout:fragment="content">
+	<div class="container">
+		<div class="my-3 border-bottom" style="padding-top: 20px;">
+			<div>
+				<h4>회원가입</h4>
+			</div>
+		</div>
+		<form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post" onkeydown="preventEnterSubmit(event)">
+				<div class="mb-3">
+					<label for="username" class="form-label">사용자ID</label>
+					<input type="text" th:field="*{username}" id="username" oninput="removeSpaces(this)" class="form-control">
+				</div>
+				<div class="mb-3">
+					<label for="password1" class="form-label">비밀번호</label>
+					<input type="password" th:field="*{password1}" id="password1" oninput="removeSpaces(this)" class="form-control">
+				</div>
+				<div class="mb-3">
+					<label for="password2" class="form-label">비밀번호 확인</label>
+					<input type="password" th:field="*{password2}" id="password2" oninput="removeSpaces(this)" class="form-control">
+				</div>
+				<div class="mb-3">
+					<label for="email" class="form-label">이메일</label>
+					<input type="email" th:field="*{email}" id="email" oninput="removeSpaces(this)" class="form-control">
+				</div>
+				<button class="btn btn-primary" type="submit">가입</button>
+			</form>
+	</div>
+	<script>
+		function preventEnterSubmit(event) {
+			if (event.key === "Enter") {
+				event.preventDefault();
+				return false;
+			}
+		}
+		
+		function removeSpaces(input) {
+			input.value = input.value.replace(/\s/g, '');
+		}
+		
+		document.addEventListener("DOMContentLoaded", function() {
+			const form = document.getElementsByTagName("form")[0];
+			const submitBtn = form.getElementsByTagName("submit");
+			submitBtn.addEventListener("submit", function() {
+				submitBtn.disabled = true;
+				submitBtn.innerText = "전송 중..";
+			})
+		})
+	</script>
+</div>
+</html>

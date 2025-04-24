@@ -1,4 +1,4 @@
-<html layout:decorate="~{board/layout}">
+<html layout:decorate="~{layout/layout}">
 <div layout:fragment="content" class="container my-3">
 	<style>
 		table, th, td {
@@ -75,5 +75,19 @@
 			</li>
 		</ul>
 	</nav>
+	<div th:if="${message}" class="toast-container">
+		<script th:inline="javascript">
+		  /*<![CDATA[*/
+		  Swal.fire({
+			icon: 'success',
+			title: '알림',
+			text: '[[${message}]]',
+			confirmButtonText: '확인',
+			allowOutsideClick: false,
+			allowEscapeKey: false
+		  });
+		  /*]]>*/
+		</script>
+	</div>
 </div>
 </html>

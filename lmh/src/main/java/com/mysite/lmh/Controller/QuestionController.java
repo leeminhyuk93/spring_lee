@@ -1,18 +1,18 @@
 package com.mysite.lmh.Controller;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mysite.lmh.entity.Question;
 
@@ -71,17 +71,8 @@ public class QuestionController {
 	
 	@PostMapping("/create")
 	public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult, 
-								 @RequestParam("formToken") String formToken, HttpSession session, Model model) {
-		
-		String sessionToken = (String) session.getAttribute("formToken");
-		
-		if (sessionToken == null || !sessionToken.equals(formToken)) {
-			bindingResult.reject("duplicateSubmission", "중복 제출이 감지되었습니다.");
-			return "board/questionForm";
-		}
-		
-		session.removeAttribute("formToken");
-		
+			Model model, RedirectAttributes redirectAttribute) {
+	
 		
 		if (questionForm.getSubject() == null || questionForm.getSubject().trim().isEmpty()) {
 			bindingResult.reject("subjectIsNothing", "제목이 입력되지 않았습니다.");
@@ -93,9 +84,20 @@ public class QuestionController {
 		if (bindingResult.hasErrors()) {
 			return "board/questionForm";
 		}
-			
-		this.questionService.create(questionForm.getSubject(), questionForm.getContent());
 		
+		try {
+			this.questionService.create(questionForm.getSubject(), questionForm.getContent());
+			
+		} catch (CannotCreateTransactionException e) {
+			bindingResult.reject("createException", "게시물을 등록하지 못했습니다.");
+			return "board/questionForm";
+			
+		} catch (Exception e) {
+			bindingResult.reject("createException", "Error: " + e.getMessage());
+			return "board/questionForm";
+		}
+		
+		redirectAttribute.addFlashAttribute("message", "질문이 성공적으로 등록되었습니다.");
 		return "redirect:/question/list";
 	}
 }
