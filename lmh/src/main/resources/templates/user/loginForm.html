@@ -1,0 +1,35 @@
+<html layout:decorate="~{layout/layout}">
+<div layout:fragment="content">
+	<div class="container">
+		<div class="my-3 border-bottom" style="padding-top: 20px;">
+			<div>
+				<h4>로그인</h4>
+			</div>
+		</div>
+		<form th:action="@{/user/login}" th:object="${userLoginForm}" method="post">
+			<div class="mb-3">
+				<label for="username" class="form-label">사용자ID</label>
+				<input type="text" th:field="*{username}" class="form-control">
+				<div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger"></div>
+			</div>
+			<div class="mb-3">
+				<label for="password" class="form-label">비밀번호</label>
+				<input type="password" name="password" id="password" class="form-control">
+				<div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
+			</div>
+			<button id="submitBtn" type="submit" class="btn btn-primary">로그인</button>
+		</form>
+	</div>
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const form = document.getElementsByTagName("form")[0];
+			const submitBtn = document.getElementById("submitBtn");
+			
+			form.addEventListener("submit", function() {
+				submitBtn.disabled = true;
+				submitBtn.innerText = "전송중..";
+			})
+		})
+	</script>
+</div>
+</html>

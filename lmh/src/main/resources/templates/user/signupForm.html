@@ -13,24 +13,34 @@
 				<div class="mb-3">
 					<label for="username" class="form-label">사용자ID</label>
 					<div class="input-group">
-						<input type="text" th:field="*{username}" id="username" oninput="removeSpaces(this)" class="form-control">
+						<input type="text" th:field="*{username}" id="username" class="form-control" autocomplete="off">
 						<span id="username-status" class="input-group-text"></span><!-- 아이템 표시 영역 -->
 					</div>
 					<div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger"></div>
 				</div>
 				<div class="mb-3">
 					<label for="password1" class="form-label">비밀번호</label>
-					<input type="password" th:field="*{password1}" id="password1" oninput="removeSpaces(this)" class="form-control">
+					<div class="input-group">
+						<input type="password" th:field="*{password1}" id="password1" oninput="validatePassword(this)" class="form-control" autocomplete="off">
+						<span id="password1-status" class="input-group-text"></span>
+					</div>
 					<div th:if="${#fields.hasErrors('password1')}" th:errors="*{password1}" class="text-danger"></div>
 				</div>
 				<div class="mb-3">
 					<label for="password2" class="form-label">비밀번호 확인</label>
-					<input type="password" th:field="*{password2}" id="password2" oninput="removeSpaces(this)" class="form-control">
+					<div class="input-group">
+						<input type="password" th:field="*{password2}" id="password2" oninput="validatePassword(this)" class="form-control" autocomplete="off">
+						<span id="password2-status" class="input-group-text"></span>
+					</div>
 					<div th:if="${#fields.hasErrors('password2')}" th:errors="*{password2}" class="text-danger"></div>
 				</div>
 				<div class="mb-3">
 					<label for="email" class="form-label">이메일</label>
-					<input type="email" th:field="*{email}" id="email" oninput="removeSpaces(this)" class="form-control">
+					<div class="input-group">
+						<input type="email" th:field="*{email}" id="email" oninput="removeSpaces(this)" class="form-control" autocomplete="off">
+						<button type="button" id="email-check" class="input-group-text" style="color: rgb(0, 128, 255)">이메일 인증</button>
+						<span id="email-check-status" class="ms-2 text-success"></span>
+					</div>
 					<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
 				</div>
 				<button class="btn btn-primary" type="submit" id="submitBtn">가입</button>
@@ -48,12 +58,74 @@
 			input.value = input.value.replace(/\s/g, '');
 		}
 		
+		function validateUsername(input) {
+			
+			const usernameStatus = document.getElementById("username-status");
+			const usernameValue = input.value;
+			input.value = usernameValue.replace(/\s/g, '');
+			
+			const isValid = usernameValue.length >= 8 && usernameValue.length <= 20;
+			console.log(isValid);
+			if (isValid) {
+				usernameStatus.innerHTML = '<i class="bi bi-check-circle text-success"></i>';
+			} else {
+				usernameStatus.innerHTML = '<i class="bi bi-x-circle text-danger"></i>';
+			}
+		}
+		
+		function validatePassword(input) {
+					
+			const password1Status = document.getElementById("password1-status");
+			const password2Status = document.getElementById("password2-status");
+			const passwordValue = input.value;
+			input.value = passwordValue.replace(/\s/g, '');
+			
+			const isValid = passwordValue.length >= 8 && passwordValue.length <= 20;
+			if (input.id === 'password1') {
+				
+				if (isValid) {
+					password1Status.innerHTML = '<i class="bi bi-check-circle text-success"></i>';
+				} else {
+					password1Status.innerHTML = '<i class="bi bi-x-circle text-danger"></i>';
+				}
+				
+			} else if (input.id === 'password2') {
+				
+				if (isValid) {
+					password2Status.innerHTML = '<i class="bi bi-check-circle text-success"></i>';
+				} else {
+					password2Status.innerHTML = '<i class="bi bi-x-circle text-danger"></i>';
+				}
+			}
+		}
+
 		document.addEventListener("DOMContentLoaded", function() {
 			const submitBtn = document.getElementById("submitBtn");
 			submitBtn.addEventListener("submit", function() {
 				submitBtn.disabled = true;
 				submitBtn.innerText = "전송 중..";
 			})
+			
+			const usernameInput = document.getElementById("username");
+			const usernameStatus = document.getElementById("username-status");
+			validateUsername(usernameInput);
+			usernameInput.addEventListener("input", function() {
+				validateUsername(usernameInput);
+			});
+			
+			const password1Input = document.getElementById("password1");
+			const password2Input = document.getElementById("password2");
+			const password1Status = document.getElementById("password1-status");
+			const password2Status = document.getElementById("password2-status");
+			validatePassword(password1Input);
+			validatePassword(password2Input);
+			password1Input.addEventListener("input", function() {
+				validatePassword(password1Input);
+			})
+			password2Input.addEventListener("input", function() {
+				validatePassword(password2Input);
+			})
+			
 		})
 	</script>
 </div>

@@ -14,6 +14,7 @@ import com.mysite.lmh.Exceptions.DuplicateUsernameException;
 import com.mysite.lmh.Service.UserService;
 import com.mysite.lmh.dto.UserCreateForm;
 import com.mysite.lmh.dto.UserCreateRequest;
+import com.mysite.lmh.dto.UserLoginForm;
 
 import jakarta.validation.Valid;
 
@@ -73,6 +74,11 @@ public class UserController {
 			model.addAttribute("errorMessage", e.getMessage());
 			return "user/signupForm";
 		}
+	}
+	
+	@GetMapping("/login")
+	public String login(UserLoginForm userLoginForm) {
+		return "user/loginForm";
 	}
 	
 }

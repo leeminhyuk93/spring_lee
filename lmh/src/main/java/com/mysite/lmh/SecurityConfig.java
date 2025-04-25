@@ -18,8 +18,14 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		
-		http.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-				.requestMatchers(new AntPathRequestMatcher("/**")).permitAll());
+		http.csrf(csrf -> csrf.disable());
+		http.authorizeHttpRequests((auth) -> auth
+				.anyRequest().permitAll()
+		);
+		http.formLogin((formLogin) -> formLogin
+				.loginPage("/user/login") // 로그인 POST 전송 URL
+				.defaultSuccessUrl("/")
+		);
 		
 		return http.build();
 	}
