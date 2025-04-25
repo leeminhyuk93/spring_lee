@@ -7,5 +7,6 @@ import com.mysite.lmh.entity.SiteUser;
 
 public interface UserRepository extends JpaRepository<SiteUser, Long> {
 
-	Optional<SiteUser> findByUsernamae();
+	Optional<SiteUser> findByUsername(String username);
+	Optional<SiteUser> findByEmail(String email);
 }

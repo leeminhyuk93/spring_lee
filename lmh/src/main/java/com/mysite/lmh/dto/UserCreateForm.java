@@ -14,11 +14,11 @@ import lombok.ToString;
 public class UserCreateForm {
 
 	@NotEmpty(message = "")
-	@Size(min = 8, max = 20, message = "")
+	@Size(min = 8, max = 20, message = "아이디는 최소 8자, 최대 20자 사이로 입력해주세요.")
 	private String username;
 	
 	@NotEmpty(message = "")
-	@Size(min = 8, message = "")
+	@Size(min = 8, message = "비밀번호는 최소 8자 이상입니다.")
 	private String password1;
 	
 	@NotEmpty(message = "")

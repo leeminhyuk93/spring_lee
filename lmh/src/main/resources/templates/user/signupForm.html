@@ -7,23 +7,33 @@
 			</div>
 		</div>
 		<form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post" onkeydown="preventEnterSubmit(event)">
+				<div class="alert alert-danger" role="alert" th:if="${#fields.hasGlobalErrors()}">
+					<p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+				</div>
 				<div class="mb-3">
 					<label for="username" class="form-label">사용자ID</label>
-					<input type="text" th:field="*{username}" id="username" oninput="removeSpaces(this)" class="form-control">
+					<div class="input-group">
+						<input type="text" th:field="*{username}" id="username" oninput="removeSpaces(this)" class="form-control">
+						<span id="username-status" class="input-group-text"></span><!-- 아이템 표시 영역 -->
+					</div>
+					<div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger"></div>
 				</div>
 				<div class="mb-3">
 					<label for="password1" class="form-label">비밀번호</label>
 					<input type="password" th:field="*{password1}" id="password1" oninput="removeSpaces(this)" class="form-control">
+					<div th:if="${#fields.hasErrors('password1')}" th:errors="*{password1}" class="text-danger"></div>
 				</div>
 				<div class="mb-3">
 					<label for="password2" class="form-label">비밀번호 확인</label>
 					<input type="password" th:field="*{password2}" id="password2" oninput="removeSpaces(this)" class="form-control">
+					<div th:if="${#fields.hasErrors('password2')}" th:errors="*{password2}" class="text-danger"></div>
 				</div>
 				<div class="mb-3">
 					<label for="email" class="form-label">이메일</label>
 					<input type="email" th:field="*{email}" id="email" oninput="removeSpaces(this)" class="form-control">
+					<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
 				</div>
-				<button class="btn btn-primary" type="submit">가입</button>
+				<button class="btn btn-primary" type="submit" id="submitBtn">가입</button>
 			</form>
 	</div>
 	<script>
@@ -39,8 +49,7 @@
 		}
 		
 		document.addEventListener("DOMContentLoaded", function() {
-			const form = document.getElementsByTagName("form")[0];
-			const submitBtn = form.getElementsByTagName("submit");
+			const submitBtn = document.getElementById("submitBtn");
 			submitBtn.addEventListener("submit", function() {
 				submitBtn.disabled = true;
 				submitBtn.innerText = "전송 중..";
