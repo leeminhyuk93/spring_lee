@@ -79,7 +79,7 @@
 		<script th:inline="javascript">
 		  /*<![CDATA[*/
 		  Swal.fire({
-			icon: 'success',
+			icon: '[[${messageIcon}]]'.replace(/"/g, ''),
 			title: '알림',
 			text: '[[${message}]]',
 			confirmButtonText: '확인',

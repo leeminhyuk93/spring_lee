@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.ui.Model;
@@ -30,7 +31,8 @@ public class QuestionController {
 	private QuestionService questionService;
 	
 	@GetMapping("/list")
-	public String getQuestions(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+	public String getQuestions(@RequestParam(name = "page", defaultValue = "0") int page, Model model
+			, HttpSession session) {
 		int listNums = 10; // 한 번에 보여질 게시물 수
 		int blockSize = 5; // 한 번에 보여질 하단의 페이지 수
 		
@@ -57,18 +59,30 @@ public class QuestionController {
 		model.addAttribute("hasPrevBlock", startPage > 0);
 		model.addAttribute("hasNextBlock", endPage < totalPages);
 		
+		String message = (String) session.getAttribute("message");
+		String messageIcon = (String) session.getAttribute("messageIcon");
+		
+		if (message != null) {
+			model.addAttribute("message", message);
+			session.removeAttribute("message");
+		}
+		
+		if (messageIcon != null) {
+			model.addAttribute("messageIcon", messageIcon);
+			session.removeAttribute("messageIcon");
+		}
+		
 		return "board/questionList";
 	}
 	
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/create")
-	public String questionCreate(Model model, HttpSession session) {
-		String token = UUID.randomUUID().toString();
-		session.setAttribute("formToken", token);
-		model.addAttribute("formToken", token);
+	public String questionCreate(Model model, HttpSession session) {		
 		model.addAttribute("questionForm", new QuestionForm());
 		return "board/questionForm";
 	}
 	
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/create")
 	public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult, 
 			Model model, RedirectAttributes redirectAttribute) {

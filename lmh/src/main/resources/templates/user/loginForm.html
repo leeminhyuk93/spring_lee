@@ -6,6 +6,7 @@
 				<h4>로그인</h4>
 			</div>
 		</div>
+		<div th:if="${loginErrorMessage}" th:text="${loginErrorMessage}" class="text-danger"></div>
 		<form th:action="@{/user/login}" th:object="${userLoginForm}" method="post">
 			<div class="mb-3">
 				<label for="username" class="form-label">사용자ID</label>
@@ -14,7 +15,7 @@
 			</div>
 			<div class="mb-3">
 				<label for="password" class="form-label">비밀번호</label>
-				<input type="password" name="password" id="password" class="form-control">
+				<input type="password" th:field="*{password}" class="form-control">
 				<div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
 			</div>
 			<button id="submitBtn" type="submit" class="btn btn-primary">로그인</button>
