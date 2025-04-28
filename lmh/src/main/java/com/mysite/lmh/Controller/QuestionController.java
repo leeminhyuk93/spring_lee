@@ -79,13 +79,27 @@ public class QuestionController {
 	@GetMapping("/create")
 	public String questionCreate(Model model, HttpSession session) {		
 		model.addAttribute("questionForm", new QuestionForm());
+		
+		String message = (String) session.getAttribute("message");
+		String messageIcon = (String) session.getAttribute("messageIcon");
+		
+		if (message != null) {
+			model.addAttribute("message", message);
+			session.removeAttribute("message");
+		}
+		
+		if (messageIcon != null) {
+			model.addAttribute("messageIcon", messageIcon);
+			session.removeAttribute("messageIcon");
+		}
+		
 		return "board/questionForm";
 	}
 	
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/create")
 	public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult, 
-			Model model, RedirectAttributes redirectAttribute) {
+			Model model, RedirectAttributes redirectAttribute, HttpSession session) {
 	
 		
 		if (questionForm.getSubject() == null || questionForm.getSubject().trim().isEmpty()) {
@@ -112,6 +126,7 @@ public class QuestionController {
 		}
 		
 		redirectAttribute.addFlashAttribute("message", "질문이 성공적으로 등록되었습니다.");
+		redirectAttribute.addFlashAttribute("messageIcon", "success");
 		return "redirect:/question/list";
 	}
 }

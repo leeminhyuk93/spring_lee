@@ -31,6 +31,20 @@
 			})
 		})
 	</script>
+	<div th:if="${message}" class="toast-container">
+		<script th:inline="javascript">
+		  /*<![CDATA[*/
+		  Swal.fire({
+			icon: '[[${messageIcon}]]'.replace(/"/g, ''),
+			title: '알림',
+			text: '[[${message}]]',
+			confirmButtonText: '확인',
+			allowOutsideClick: false,
+			allowEscapeKey: false
+		  });
+		  /*]]>*/
+		</script>
+	</div>
 </div>
 
 </html>
