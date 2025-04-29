@@ -1,6 +1,9 @@
 package com.mysite.lmh.Controller;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,10 +13,12 @@ import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.mysite.lmh.entity.Answer;
 
 import com.mysite.lmh.entity.Question;
 
@@ -21,6 +26,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import com.mysite.lmh.Service.QuestionService;
+import com.mysite.lmh.dto.AnswerCreateForm;
 import com.mysite.lmh.dto.QuestionForm;
 
 @Controller
@@ -37,8 +43,8 @@ public class QuestionController {
 		int blockSize = 5; // 한 번에 보여질 하단의 페이지 수
 		
 		Page<Question> questionPage = this.questionService.getQuestions(page, listNums);
-		long totalQuestion = questionPage.getTotalElements();
-		int totalPages = questionPage.getTotalPages();
+		long totalQuestion = questionPage.getTotalElements(); // 총 개시물 수
+		int totalPages = questionPage.getTotalPages(); // 총 페이지 수
 		
 		// 현재 를록 번호
 		int currentBlock = page / blockSize;
@@ -128,5 +134,27 @@ public class QuestionController {
 		redirectAttribute.addFlashAttribute("message", "질문이 성공적으로 등록되었습니다.");
 		redirectAttribute.addFlashAttribute("messageIcon", "success");
 		return "redirect:/question/list";
+	}
+	
+	@GetMapping("/detail/{id}")
+	public String questionDetail(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttribute) {
+		Question question = this.questionService.getQuestion(id);
+		if (question != null) {
+			Comparator<Answer> byCreateDateDesc = Comparator.comparing(Answer::getCreateDate);
+			List<Answer> answerListReversed = question.getAnswerList();
+//					.stream()
+//					.sorted(byCreateDateDesc)
+//					.collect(Collectors.toList());
+			
+			
+			model.addAttribute("answerList", answerListReversed);
+			model.addAttribute("question", question);
+			model.addAttribute("answerCreateForm", new AnswerCreateForm());
+			return "board/questionDetail";
+		} else {
+			redirectAttribute.addFlashAttribute("messageIcon", "error");
+			redirectAttribute.addFlashAttribute("message", "게시물을 찾을 수 없습니다.");
+			return "redirect:/question/list";
+		}
 	}
 }

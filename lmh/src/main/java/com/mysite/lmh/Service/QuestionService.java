@@ -3,6 +3,7 @@ package com.mysite.lmh.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.mysite.lmh.Exceptions.UserNotFoundException;
 import com.mysite.lmh.entity.Question;
 import com.mysite.lmh.entity.QuestionSequence;
 import com.mysite.lmh.repository.QuestionRepository;
@@ -26,6 +28,20 @@ public class QuestionService {
 	private final QuestionRepository questionRepository;
 	private final QuestionSequenceRepository sequenceRepository;
 
+	
+	// 업데이트 메서드 테스트 미완료
+	@Transactional
+	public Question update(Long id, String subject, String content) {
+		Optional<Question> _question = this.questionRepository.findById(id);
+		if (_question.isEmpty()) {
+			throw new UserNotFoundException("사용자를 찾을 수 없습니다.");
+		} else {
+			Question question = _question.get();
+			question.setSubject(subject);
+			question.setContent(content);
+			return this.questionRepository.save(question);
+		}
+	}
 	
 	@Transactional
 	public Question create(String subject, String content) {
@@ -66,5 +82,10 @@ public class QuestionService {
 		Sort sort = Sort.by("createDate").descending();
 		Pageable pageable = PageRequest.of(page, size, sort);
 		return this.questionRepository.findAll(pageable);
+	}
+	
+	public Question getQuestion(Long id) {
+		return this.questionRepository.findById(id)
+				.orElse(null);
 	}
 }

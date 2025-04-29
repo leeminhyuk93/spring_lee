@@ -1,0 +1,91 @@
+<html layout:decorate="~{layout/layout}">
+<div layout:fragment="content">
+	<div class="container">
+		<h2 class="border-bottom py-4" th:text="${question.subject}"></h2>
+		<div class="my-3">
+			<div class="text-end">
+				<button id="btnUpdate" class="btn btn-primary">수정</button>
+				<button id="btnDelete" class="btn btn-danger">삭제</button>
+			</div>
+		</div>
+		<div class="card my-3">
+			<div class="card-body">
+				<div class="card-text" style="white-space: pre-line; height: 200px;" th:text="${question.content}"></div>
+				<div class="d-flex justify-content-end" th:if="${question.lastModifiedDate != null}">
+				    <div class="text-end">
+						<div class="text-start">
+							<div class="mb-1">modified at</div>
+					        <div th:text="${#temporals.format(question.lastModifiedDate, 'yyyy-MM-dd HH:mm')}"></div>
+						</div>
+				    </div>
+				</div>
+			</div>
+		</div>
+		<!-- 답변 작성 공간 -->
+		<form th:action="@{/answer/create/{id}(id=${question.id})}" method="post" th:object="${answerCreateForm}" class="my-3">
+			<textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" class="form-control" rows="5" style="resize: none;"></textarea>
+			<textarea sec:authorize="isAuthenticated()" th:field="*{content}" class="form-control" rows="5" style="resize: none;"></textarea>
+			<div class="text-end">
+				<input type="submit" value="답변등록" class="btn btn-primary my-2">
+			</div>
+		</form>
+		<!-- 답변 내용 반복 -->
+		<div class="card my-3" th:each="answer : ${answerList}">
+			<div class="card-body">
+				<div class="card-text" style="white-space: pre-line; height: 50px" th:text="${answer.content}"></div>
+			</div>
+		</div>
+	</div>
+	<div th:if="${message}">
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+			Swal.fire({
+				icon: '[[${messageIcon}]]'.replace(/"/g, ''),
+				title: '알림',
+				text: '[[${message}]]'.replace(/"/g, ''),
+				confirmButtonText: '확인',
+				allowOutsideClick: false,
+				allowEscapeKey: false
+			})
+			/*]]>*/
+		</script>
+	</div>
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const btnUpdate = document.getElementById("btnUpdate");
+			const btnDelete = document.getElementById("btnDelete");
+			
+			btnUpdate.addEventListener("click", function() {
+				  /*<![CDATA[*/
+				  Swal.fire({
+					title: "수정폼으로 이동하시겠습니까?",
+					text: "확인을 누르시면 이동합니다.",
+					icon: "question",
+					showCancelButton: true,
+					confirmButtonColor: "#3085d6",
+					cancelButtonColor: "#d33",
+					confirmButtonText: "확인",
+					cancelButtonText: "취소",
+					allowOutsideClick: false,
+					allowEscapeKey: false
+				  }).then((result) => {
+					if (result.isConfirmed) {
+						Swal.fire({
+							title: "이동합니다.",
+							text: "이 기능은 미구현 되었습니다.",
+							icon: "success"
+						});
+						
+					} else {
+						Swal.fire({
+							title: "취소되었습니다.",
+							icon: "info"
+						});
+					}
+				  });
+				  /*]]>*/
+			});
+		});
+	</script>
+</div>
+</html>

@@ -1,10 +1,15 @@
 package com.mysite.lmh.entity;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,5 +30,11 @@ public class Question extends BaseTimeEntity {
 	
 	@Column(unique = true)
 	private String questionNo; // 예: 20250422-00001
+	
+	@ManyToOne
+	private SiteUser author; // 작성자
+	
+	@OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+	private List<Answer> answerList;
 	
 }
