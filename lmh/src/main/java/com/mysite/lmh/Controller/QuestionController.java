@@ -140,11 +140,7 @@ public class QuestionController {
 	public String questionDetail(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttribute) {
 		Question question = this.questionService.getQuestion(id);
 		if (question != null) {
-			Comparator<Answer> byCreateDateDesc = Comparator.comparing(Answer::getCreateDate);
 			List<Answer> answerListReversed = question.getAnswerList();
-//					.stream()
-//					.sorted(byCreateDateDesc)
-//					.collect(Collectors.toList());
 			
 			
 			model.addAttribute("answerList", answerListReversed);
