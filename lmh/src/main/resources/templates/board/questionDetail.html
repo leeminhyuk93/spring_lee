@@ -33,6 +33,10 @@
 		<div class="card my-3" th:each="answer : ${answerList}">
 			<div class="card-body">
 				<div class="card-text" style="white-space: pre-line; height: 50px" th:text="${answer.content}"></div>
+				<div class="text-end" style="display: flex; justify-content: flex-end; gap: 4px; color: rgb(0, 128, 192)">
+					<div>작성자 :</div>
+					<div th:if="${answer.author.username}" th:text="${answer.author.username}"></div>
+				</div>
 			</div>
 		</div>
 	</div>

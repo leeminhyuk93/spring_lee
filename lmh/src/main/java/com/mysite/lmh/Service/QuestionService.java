@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.mysite.lmh.Exceptions.UserNotFoundException;
 import com.mysite.lmh.entity.Question;
 import com.mysite.lmh.entity.QuestionSequence;
+import com.mysite.lmh.entity.SiteUser;
 import com.mysite.lmh.repository.QuestionRepository;
 import com.mysite.lmh.repository.QuestionSequenceRepository;
 
@@ -44,7 +45,7 @@ public class QuestionService {
 	}
 	
 	@Transactional
-	public Question create(String subject, String content) {
+	public Question create(String subject, String content, SiteUser author) {
 		
 		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 		int nextSeq = getNextSequence(today);
@@ -53,6 +54,7 @@ public class QuestionService {
 		Question question = new Question();
 		question.setSubject(subject);
 		question.setContent(content);
+		question.setAuthor(author);
 		question.setQuestionNo(questionNo);
 		
 		return questionRepository.save(question);

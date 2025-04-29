@@ -1,5 +1,6 @@
 package com.mysite.lmh.Controller;
 
+import java.security.Principal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -21,11 +22,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.mysite.lmh.entity.Answer;
 
 import com.mysite.lmh.entity.Question;
+import com.mysite.lmh.entity.SiteUser;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import com.mysite.lmh.Service.QuestionService;
+import com.mysite.lmh.Service.UserService;
 import com.mysite.lmh.dto.AnswerCreateForm;
 import com.mysite.lmh.dto.QuestionForm;
 
@@ -35,6 +38,9 @@ public class QuestionController {
 
 	@Autowired
 	private QuestionService questionService;
+	
+	@Autowired
+	private	UserService userService;
 	
 	@GetMapping("/list")
 	public String getQuestions(@RequestParam(name = "page", defaultValue = "0") int page, Model model
@@ -105,7 +111,7 @@ public class QuestionController {
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/create")
 	public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult, 
-			Model model, RedirectAttributes redirectAttribute, HttpSession session) {
+			Model model, RedirectAttributes redirectAttribute, HttpSession session, Principal principal) {
 	
 		
 		if (questionForm.getSubject() == null || questionForm.getSubject().trim().isEmpty()) {
@@ -120,7 +126,8 @@ public class QuestionController {
 		}
 		
 		try {
-			this.questionService.create(questionForm.getSubject(), questionForm.getContent());
+			SiteUser author = this.userService.getUserByUsername(principal.getName()).orElse(null);
+			this.questionService.create(questionForm.getSubject(), questionForm.getContent(), author);
 			
 		} catch (CannotCreateTransactionException e) {
 			bindingResult.reject("createException", "게시물을 등록하지 못했습니다.");
