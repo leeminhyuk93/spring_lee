@@ -12,7 +12,7 @@ import lombok.ToString;
 public class AnswerCreateForm {
 
 	@NotBlank(message = "")
-	@Size(min = 10, max = 50, message = "내용을 10자 이상 입력해주세요.")
+	@Size(min = 10, max = 50, message = "내용은 10자 이상, 50자 이하로 작성해주세요.")
 	private String content;
 	
 }

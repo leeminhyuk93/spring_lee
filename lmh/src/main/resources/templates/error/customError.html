@@ -1,0 +1,10 @@
+<html layout:decorate="~{layout/layout}">
+<div layout:fragment="content">
+	<div class="container">
+		<h1 class="border-bottom" style="margin-top: 20px;">에러 페이지</h1>
+		<div class="text-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+		<div class="text-danger" th:if="${exceptionDetail}" th:text="${exceptionDetail}"></div>
+		<a th:href="@{/}">메인 페이지로 이동</a>
+	</div>
+</div>
+</html>

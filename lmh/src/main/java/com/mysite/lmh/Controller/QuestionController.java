@@ -144,15 +144,28 @@ public class QuestionController {
 	}
 	
 	@GetMapping("/detail/{id}")
-	public String questionDetail(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttribute) {
+	public String questionDetail(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttribute
+			, HttpSession session, Principal principal) {
 		Question question = this.questionService.getQuestion(id);
 		if (question != null) {
 			List<Answer> answerListReversed = question.getAnswerList();
 			
-			
 			model.addAttribute("answerList", answerListReversed);
 			model.addAttribute("question", question);
 			model.addAttribute("answerCreateForm", new AnswerCreateForm());
+			String loggedUserName = (principal != null) ? principal.getName() : null;
+			boolean isOwner = (loggedUserName != null && loggedUserName.equals(question.getAuthor().getUsername()));
+			model.addAttribute("isOwner", isOwner);
+			
+			String message = (String) session.getAttribute("message");
+			if (message != null) {
+				String messageIcon = (String) session.getAttribute("messageIcon");
+				session.removeAttribute("message");
+				session.removeAttribute("messageIcon");
+				model.addAttribute("message", message);
+				model.addAttribute("messageIcon", messageIcon);
+			}
+			
 			return "board/questionDetail";
 		} else {
 			redirectAttribute.addFlashAttribute("messageIcon", "error");
@@ -160,4 +173,33 @@ public class QuestionController {
 			return "redirect:/question/list";
 		}
 	}
+	
+	@GetMapping("/modify")
+	public String questionModify(@RequestParam("id") Long id, Model model) {
+		Question question = this.questionService.getQuestion(id);
+		QuestionForm questionForm = new QuestionForm();
+	    questionForm.setSubject(question.getSubject());
+	    questionForm.setContent(question.getContent());
+	    
+		model.addAttribute("question", question);
+		model.addAttribute("questionForm", questionForm);
+		return "board/questionUpdate";
+	}
+	
+	@PreAuthorize("isAuthenticated()")
+	@PostMapping("/modify/{id}")
+	public String questionModify(@Valid QuestionForm questionForm, BindingResult bindingResult, 
+			@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttribute) {
+		Question question = this.questionService.getQuestion(id);
+		
+		if (bindingResult.hasErrors()) {
+			return "board/questionUpdate";
+		}
+		
+		this.questionService.update(id, questionForm.getSubject(), questionForm.getContent());
+		redirectAttribute.addFlashAttribute("messageIcon", "success");
+		redirectAttribute.addFlashAttribute("message", "수정이 완료되었습니다.");
+		return "redirect:/question/detail/" + question.getId();
+	}
 }
+

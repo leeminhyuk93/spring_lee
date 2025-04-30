@@ -16,10 +16,10 @@ import lombok.Getter;
 public abstract class BaseTimeEntity { // 이 클래스는 추상화(Abstract) 클래스입니다.
 	
 	@CreatedDate
-	@Column(updatable = false)
+	@Column
 	private LocalDateTime createDate;
 	
 	@LastModifiedDate
-	@Column(updatable = false)
+	@Column
 	private LocalDateTime lastModifiedDate;
 }

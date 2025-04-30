@@ -17,6 +17,7 @@ import com.mysite.lmh.dto.UserCreateForm;
 import com.mysite.lmh.dto.UserCreateRequest;
 import com.mysite.lmh.dto.UserLoginForm;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @Controller
@@ -67,6 +68,8 @@ public class UserController {
 				return "user/signupForm";
 			}
 			
+			redirectAttributes.addFlashAttribute("messageIcon", "success");
+			redirectAttributes.addFlashAttribute("message", "회원가입되었습니다.");
 			this.userService.create(request);
 			return "redirect:/question/list";
 			
@@ -79,9 +82,14 @@ public class UserController {
 	
 	@GetMapping("/login")
 	public String login(UserLoginForm userLoginForm, @RequestParam(value = "error", required = false) String error,
-			Model model) {
+			Model model, HttpServletRequest request) {
 		if (error != null) {
 			model.addAttribute("loginErrorMessage", "* 아이디 또는 비밀번호가 잘못되었습니다.");
+		}
+		
+		String referer = request.getHeader("Referer");
+		if (referer != null && !referer.contains("/user/login")) {
+			request.getSession().setAttribute("prevPage", referer);
 		}
 		return "user/loginForm";
 	}

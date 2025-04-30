@@ -2,8 +2,8 @@
 <div layout:fragment="content">
 	<div class="container">
 		<div class="row justify-content-center">
-			<h5 class="my-3 border-botton pb-2">질문등록</h5>
-			<form action="#" th:object="${questionForm}" method="post">
+			<h5 class="my-3 border-botton pb-2">질문수정</h5>
+			<form th:action="@{/question/modify/{id}(id=${question.id})}" th:object="${questionForm}" method="post">
 				<div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
 					<p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
 				</div>
@@ -17,7 +17,8 @@
 					<textarea th:field="*{content}" id="content" class="form-control" rows="10" autocomplete="off"></textarea>
 					<div class="text-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
 				</div>
-				<button type="submit" id="submitBtn" th:text="작성하기" class="btn btn-primary my-2"></button>
+				<button type="submit" id="submitBtn" th:text="수정하기" class="btn btn-primary my-2"></button>
+				<button type="button" id="cancelBtn" th:text="돌아가기" class="btn btn-secondary my-2"></button>
 			</form>
 		</div>
 	</div>
@@ -29,22 +30,13 @@
 				submitBtn.disabled = true;
 				submitBtn.innerText = "등록 중..";
 			})
+			
+			const cancelBtn = document.getElementById("cancelBtn");
+			cancelBtn.addEventListener("click", function() {
+				window.history.back();
+			})
 		})
 	</script>
-	<div th:if="${message}" class="toast-container">
-		<script th:inline="javascript">
-		  /*<![CDATA[*/
-		  Swal.fire({
-			icon: '[[${messageIcon}]]'.replace(/"/g, ''),
-			title: '알림',
-			text: '[[${message}]]',
-			confirmButtonText: '확인',
-			allowOutsideClick: false,
-			allowEscapeKey: false
-		  });
-		  /*]]>*/
-		</script>
-	</div>
 </div>
 
 </html>
