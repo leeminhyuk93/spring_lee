@@ -90,4 +90,8 @@ public class QuestionService {
 		return this.questionRepository.findById(id)
 				.orElse(null);
 	}
+	
+	public void delete(Question question) {
+		this.questionRepository.delete(question);
+	}
 }

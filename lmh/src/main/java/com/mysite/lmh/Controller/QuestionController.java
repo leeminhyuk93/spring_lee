@@ -201,5 +201,19 @@ public class QuestionController {
 		redirectAttribute.addFlashAttribute("message", "수정이 완료되었습니다.");
 		return "redirect:/question/detail/" + question.getId();
 	}
+	
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/delete")
+	public String questionDelete(@RequestParam("id") Long id, RedirectAttributes redirectAttribute) {
+		Question question = this.questionService.getQuestion(id);
+		if (question != null) {
+			this.questionService.delete(question);
+			redirectAttribute.addFlashAttribute("messageIcon", "success");
+			redirectAttribute.addFlashAttribute("message", "게시물이 삭제되었습니다.");
+			return "redirect:/question/list";
+		} else {
+			return "/";
+		}
+	}
 }
 
